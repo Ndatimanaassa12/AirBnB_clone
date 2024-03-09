@@ -13,7 +13,7 @@ This is the first part of the project that simulates an airbnb application in wh
 
 # Prerequisites 
 
-Python3.4+ has to be installed if you desire to use the console:
+Python3.4+ has to be insta
 ```
 sudo apt-get install python3
 ```
