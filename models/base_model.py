@@ -1,35 +1,32 @@
 #!/usr/bin/python3
 import uuid
 from datetime import datetime
-from models import storage  # import the FileStorage instance
 
 class BaseModel:
     """Base class for all models"""
 
     def __init__(self, *args, **kwargs):
-        """Initialize a new BaseModel instance"""
-        if kwargs:  # Re-create from dictionary
+        """Initialize attributes"""
+        if kwargs:
             for key, value in kwargs.items():
-                if key in ("created_at", "updated_at"):
+                if key == "created_at" or key == "updated_at":
                     setattr(self, key, datetime.fromisoformat(value))
-                elif key != "__class__":  # ignore class key
+                elif key != "__class__":  # avoid setting class name
                     setattr(self, key, value)
-        else:  # New instance
+        else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
-            storage.new(self)  # register new instance in FileStorage
 
     def __str__(self):
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        """Update updated_at and save to FileStorage"""
+        """Update updated_at with current datetime"""
         self.updated_at = datetime.now()
-        storage.save()
 
     def to_dict(self):
-        """Return a dictionary representation of the instance"""
+        """Return dictionary with all keys/values + class name"""
         d = self.__dict__.copy()
         d['__class__'] = self.__class__.__name__
         d['created_at'] = self.created_at.isoformat()
